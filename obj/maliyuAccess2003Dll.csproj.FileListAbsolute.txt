@@ -3,4 +3,3 @@ C:\Work\maliyu\Personal\maliyuAccess2003Dll\bin\Debug\maliyuAccess2003Dll.dll
 C:\Work\maliyu\Personal\maliyuAccess2003Dll\bin\Debug\maliyuAccess2003Dll.pdb
 C:\Work\maliyu\Personal\maliyuAccess2003Dll\obj\Debug\maliyuAccess2003Dll.dll
 C:\Work\maliyu\Personal\maliyuAccess2003Dll\obj\Debug\maliyuAccess2003Dll.pdb
-C:\Work\maliyu\Personal\maliyuAccess2003Dll\bin\Debug\maliyuAccess2003Dll.XML

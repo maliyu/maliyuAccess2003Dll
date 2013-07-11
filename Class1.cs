@@ -28,11 +28,6 @@ namespace maliyuAccess2003Dll
                 throw (new ArgumentNullException());
             }
 
-            if (oleConn.State.CompareTo(System.Data.ConnectionState.Open) < 0)
-            {
-                throw (new SystemException("Database is not open!"));
-            }
-
             dbOleConn = oleConn;
         }
 
@@ -59,6 +54,8 @@ namespace maliyuAccess2003Dll
             {
                 throw new ArgumentNullException();
             }
+
+            dbOleConn.Open();
 
             inputString = searchString;
             outputResult = new DataSet();
@@ -126,6 +123,8 @@ namespace maliyuAccess2003Dll
                 }
             }
 
+            dbOleConn.Close();
+
             return outputResult;
         }
 
@@ -152,6 +151,8 @@ namespace maliyuAccess2003Dll
             {
                 throw new ArgumentNullException();
             }
+
+            dbOleConn.Open();
 
             DataSet resultDataSet = null;
 
@@ -202,6 +203,70 @@ namespace maliyuAccess2003Dll
                     }
                 }
             }
+
+            dbOleConn.Close();
+
+            return resultDataSet;
+        }
+
+        /// <summary>
+        /// get record from specific table based on table name, field name and field content 
+        /// </summary>
+        /// <param name="TableName"> Table name. If database does not contain it, then null will be return </param>
+        /// <param name="FieldName"> Table field name. If database does not contain it, then null will be return </param>
+        /// <param name="FieldContent"> Table field content. If database does not contain it, then null will be return </param>
+        /// <returns >It may return multi table and record
+        /// </returns>
+        public DataSet GetDBRecord(string TableName, string FieldName, string FieldContent)
+        {
+            if (TableName == null || FieldName == null || FieldContent == null)
+            {
+                throw (new ArgumentNullException());
+            }
+
+            if (TableName.Length == 0 || FieldName.Length == 0 || FieldContent.Length == 0)
+            {
+                throw (new SystemException("Search string is empty!"));
+            }
+
+            if (dbOleConn == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            dbOleConn.Open();
+
+            DataSet resultDataSet = null;
+
+            string sqlQueryString = string.Format("SELECT * FROM [{0}] WHERE [{1}] = \"{2}\"", TableName, FieldName, FieldContent);
+            OleDbCommand oleDbCmd = new System.Data.OleDb.OleDbCommand(sqlQueryString, dbOleConn);
+            OleDbDataReader dataReader = oleDbCmd.ExecuteReader();
+            while (dataReader.Read())
+            {
+                if (resultDataSet == null)
+                {
+                    resultDataSet = new DataSet();
+                }
+                DataTable newRstTable = resultDataSet.Tables.Add(TableName);
+                for (int i = 0; i < dataReader.FieldCount; i++)
+                {
+                    newRstTable.Columns.Add(dataReader.GetName(i), dataReader.GetFieldType(i));
+                }
+
+                DataRow newRstTableRow = newRstTable.NewRow();
+                for (int i = 0; i < dataReader.FieldCount; i++)
+                {
+                    newRstTableRow[dataReader.GetName(i)] = dataReader[dataReader.GetName(i)];
+                }
+                newRstTable.Rows.Add(newRstTableRow);
+            }
+
+            if (dataReader.HasRows)
+            {
+                dataReader.Close();
+            }
+
+            dbOleConn.Close();
 
             return resultDataSet;
         }
