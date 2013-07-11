@@ -1,0 +1,6 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartAction>Project</StartAction>
+    <StartProgram>C:\Work\maliyu\Personal\SemtechAssistant\obj\Debug\SemtechAssistant.exe</StartProgram>
+  </PropertyGroup>
+</Project>
